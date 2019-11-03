@@ -57,8 +57,6 @@ NUMBER_OF_TESTS = 48
 
 import copy
 import ast
-from anytree import Node, RenderTree
-from anytree.exporter import DotExporter, UniqueDotExporter
 from itertools import combinations
 from copy import deepcopy
 import re
