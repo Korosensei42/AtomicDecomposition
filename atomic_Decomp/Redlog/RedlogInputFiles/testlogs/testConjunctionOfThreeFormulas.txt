@@ -1,0 +1,31 @@
++++ Transcript to testlogs/testConjunctionOfThree started at Sat Nov 02 10:24:56 2019 +++
+Reduce (Free CSL version), 20-Oct-15 ...
+
+
+
+{}
+
+
+
+
+vars := {m1,c1}
+
+
+formula := ((0 <= 0 and  - m1 <= 0 and (c1 = 0 impl m1 = 0)) and 0 <= 0
+
+ and  - m1 <= 0 and (c1 = 0 impl m1 = 0)) and 0 <= 0 and  - m1 <= 0
+
+ and (c1 = 0 impl m1 = 0)
+
+
+query := true
+
+
+
+
+
+
+
+*** End-of-file read 
+
++++ Transcript closed at end of run +++

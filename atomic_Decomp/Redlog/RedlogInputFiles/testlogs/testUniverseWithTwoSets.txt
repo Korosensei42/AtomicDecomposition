@@ -1,0 +1,29 @@
++++ Transcript to testlogs/testUniverseWithTwoSet started at Sat Nov 02 10:25:52 2019 +++
+Reduce (Free CSL version), 20-Oct-15 ...
+
+
+
+{}
+
+
+
+
+vars := {m10,c11,m11,c10}
+
+
+formula := (0 <= 0 and ( - m10 <= 0 and  - m11 <= 0) and (c10 = 0 impl m10 = 0)
+
+ and (c11 = 0 impl m11 = 0)) and 0 = 0 and not(0 = 0)
+
+
+query := false
+
+
+
+
+
+
+
+*** End-of-file read 
+
++++ Transcript closed at end of run +++

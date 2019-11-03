@@ -1,0 +1,11 @@
+load_package redlog;
+rlset OFSF;
+off rlverbose;
+on rlnzden;
+
+vars := {c0, c1};
+
+    formula := ((c1 = 0) and (c0 = 0));
+query := (rlqe ex(vars, formula));
+
+end;

@@ -1,0 +1,29 @@
++++ Transcript to testlogs/testUniverseWithOneSet started at Sat Nov 02 10:25:41 2019 +++
+Reduce (Free CSL version), 20-Oct-15 ...
+
+
+
+{}
+
+
+
+
+vars := {c1,m1}
+
+
+formula := 
+
+(0 <= 0 and  - m1 <= 0 and (c1 = 0 impl m1 = 0)) and 0 = 0 and not(0 = 0)
+
+
+query := false
+
+
+
+
+
+
+
+*** End-of-file read 
+
++++ Transcript closed at end of run +++

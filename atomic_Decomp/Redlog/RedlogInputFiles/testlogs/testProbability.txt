@@ -1,0 +1,49 @@
++++ Transcript to testlogs/testProbability.txt started at Sat Nov 02 10:25:24 2019 +++
+Reduce (Free CSL version), 20-Oct-15 ...
+
+
+
+{}
+
+
+
+
+vars := {m10,
+
+         m01,
+
+         m11,
+
+         c10,
+
+         c01,
+
+         c11}
+
+
+formula := ((( - m10 <= 0 and (c10 = 0 impl m10 = 0)) and  - m01 <= 0
+
+ and (c01 = 0 impl m01 = 0)) and  - m11 <= 0 and (c11 = 0 impl m11 = 0))
+
+ and (5*m10 + 5*m11 - 2 = 0 and 5*m01 + 5*m11 - 2 = 0)
+
+ and 2*m01 + 2*m10 + 2*m11 - 1 = 0
+
+
+                                                                        1
+query := {{true,{c01 = infinity2,c10 = infinity1,c11 = infinity3,m01 = ----,m10
+                                                                        10
+
+                     1          3
+                  = ----,m11 = ----}}}
+                     10         10
+
+
+
+
+
+
+
+*** End-of-file read 
+
++++ Transcript closed at end of run +++

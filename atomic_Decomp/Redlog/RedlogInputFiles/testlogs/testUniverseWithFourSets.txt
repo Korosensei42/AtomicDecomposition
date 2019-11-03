@@ -1,0 +1,71 @@
++++ Transcript to testlogs/testUniverseWithFourSe started at Sat Nov 02 10:25:35 2019 +++
+Reduce (Free CSL version), 20-Oct-15 ...
+
+
+
+{}
+
+
+
+
+vars := {m1010,
+
+         m1011,
+
+         c1100,
+
+         m1100,
+
+         c1011,
+
+         m1101,
+
+         c1110,
+
+         c1000,
+
+         c1101,
+
+         m1000,
+
+         c1111,
+
+         c1010,
+
+         c1001,
+
+         m1111,
+
+         m1001,
+
+         m1110}
+
+
+formula := (0 <= 0 and ((((
+
+((( - m1000 <= 0 and  - m1001 <= 0) and  - m1010 <= 0) and  - m1011 <= 0)
+
+ and  - m1100 <= 0) and  - m1101 <= 0) and  - m1110 <= 0) and  - m1111 <= 0) and
+
+ (((((((c1000 = 0 impl m1000 = 0) and (c1001 = 0 impl m1001 = 0))
+
+ and (c1010 = 0 impl m1010 = 0)) and (c1011 = 0 impl m1011 = 0))
+
+ and (c1100 = 0 impl m1100 = 0)) and (c1101 = 0 impl m1101 = 0))
+
+ and (c1110 = 0 impl m1110 = 0)) and (c1111 = 0 impl m1111 = 0)) and 0 = 0
+
+ and not(0 = 0)
+
+
+query := false
+
+
+
+
+
+
+
+*** End-of-file read 
+
++++ Transcript closed at end of run +++

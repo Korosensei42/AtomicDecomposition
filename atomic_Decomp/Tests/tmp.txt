@@ -1,0 +1,27 @@
+[['subsetequal', [['neg', ['x1']], 'x1']]]
+
+['x1']
+
+[['setequals', ['emptyset', ['intersect', ['x1', ['neg', ['x1']]]]]]]
+
+["x1"]
+
+[["setequals", ["x1", "x2"]]]
+
+["x1"]
+
+["setequals", [["x1"], ["x1"]]]
+
+["x1"]
+
+[["arithequals", [["x1"], ["m", ["x2"]]]]]
+
+["x1", "x2"]
+
+[["setequals", [["1"], ["x1"]]]]
+
+["x1"]
+
+[["arithequals", [["+", [["m", ["x1"]], ["m", ["x2"]]]], ["m", ["union", ["x1", "x2"]]]]], ["setequals", ["x1", ["union", ["x2", "x3"]]]]]
+
+["x1", "x2", "x3"]

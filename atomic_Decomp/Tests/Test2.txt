@@ -1,0 +1,3 @@
+[['setequals', [['emptyset'], ['x1']]]]
+
+['x1']

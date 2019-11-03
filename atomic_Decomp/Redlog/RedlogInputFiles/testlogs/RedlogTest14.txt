@@ -1,0 +1,27 @@
++++ Transcript to testlogs/RedlogTest14.txt started at Sat Nov 02 10:26:24 2019 +++
+Reduce (Free CSL version), 20-Oct-15 ...
+
+
+
+{}
+
+
+
+
+vars := {c1}
+
+
+formula := 0 = 0 and not(c1 = 0)
+
+
+query := true
+
+
+
+
+
+
+
+*** End-of-file read 
+
++++ Transcript closed at end of run +++

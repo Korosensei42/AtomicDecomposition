@@ -1,0 +1,3 @@
+[['arithequals', [['m', ['x1']], ['m', ['emptyset']]]]]
+
+['x1']

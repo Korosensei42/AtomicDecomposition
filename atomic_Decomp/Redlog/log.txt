@@ -1,0 +1,3 @@
++++ Transcript to log.txt started at Sat Oct 19 14:10:24 2019 +++
+Reduce (Free CSL version), 20-Oct-15 ...
+

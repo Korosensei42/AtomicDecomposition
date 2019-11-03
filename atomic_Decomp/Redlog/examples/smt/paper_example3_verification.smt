@@ -1,0 +1,41 @@
+(benchmark smt
+:source { H-PILoT }
+:logic AUFLIA
+:category { generated }
+:status unknown
+
+:extrafuns ((d11  Int))
+:extrafuns ((d12  Int))
+:extrafuns ((d21  Int))
+:extrafuns ((d22  Int))
+:extrafuns ((d31  Int))
+:extrafuns ((d32  Int))
+:extrafuns ((d_1  Int))
+:extrafuns ((d_2  Int))
+:extrafuns ((d_3  Int))
+:extrafuns ((e_4  Int))
+:extrafuns ((e_5  Int))
+:extrafuns ((e_6  Int))
+
+:assumption (or (not (>= d22 e_6)) (not (<= d32 1)))
+:assumption (<= d31 1)
+:assumption (>= d21 e_4)
+:assumption (= (* 2 d32) d31)
+:assumption (= d22 (+ e_5 (- 1 d31)))
+:assumption (= d12 e_4)
+:assumption (= d_3 (+ d12 1))
+:assumption (= d_2 (+ d21 1))
+:assumption (= d_1 (+ d11 1))
+:assumption (implies (= d_1 d_3) (= e_4 e_6))
+:assumption (implies (= d_1 d_2) (= e_4 e_5))
+:assumption (implies (= d_2 d_3) (= e_5 e_6))
+:assumption (implies (<= d_1 d_1) (<= e_4 e_4))
+:assumption (implies (<= d_1 d_2) (<= e_4 e_5))
+:assumption (implies (<= d_1 d_3) (<= e_4 e_6))
+:assumption (implies (<= d_2 d_1) (<= e_5 e_4))
+:assumption (implies (<= d_2 d_2) (<= e_5 e_5))
+:assumption (implies (<= d_2 d_3) (<= e_5 e_6))
+:assumption (implies (<= d_3 d_1) (<= e_6 e_4))
+:assumption (implies (<= d_3 d_2) (<= e_6 e_5))
+:assumption (implies (<= d_3 d_3) (<= e_6 e_6))
+)

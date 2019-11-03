@@ -1,0 +1,67 @@
++++ Transcript to testlogs/testlargeformulaWithSp started at Sat Nov 02 10:25:18 2019 +++
+Reduce (Free CSL version), 20-Oct-15 ...
+
+
+
+{}
+
+
+
+
+vars := {m011,
+
+         m001,
+
+         c111,
+
+         m101,
+
+         m110,
+
+         m100,
+
+         m111,
+
+         c011,
+
+         c101,
+
+         c110,
+
+         c001,
+
+         m010,
+
+         c010,
+
+         c100}
+
+
+formula := ((c011 = 0 and c010 = 0) and not(0 = 0))
+
+ and  - m010 + 3*m100 + m101 + 2*m110 + m111 <= 0 and (((
+
+((( - m001 <= 0 and  - m010 <= 0) and  - m011 <= 0) and  - m100 <= 0)
+
+ and  - m101 <= 0) and  - m110 <= 0) and  - m111 <= 0) and ((((
+
+((c001 = 0 impl m001 = 0) and (c010 = 0 impl m010 = 0))
+
+ and (c011 = 0 impl m011 = 0)) and (c100 = 0 impl m100 = 0))
+
+ and (c101 = 0 impl m101 = 0)) and (c110 = 0 impl m110 = 0))
+
+ and (c111 = 0 impl m111 = 0)
+
+
+query := false
+
+
+
+
+
+
+
+*** End-of-file read 
+
++++ Transcript closed at end of run +++

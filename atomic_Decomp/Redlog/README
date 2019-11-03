@@ -1,0 +1,27 @@
+--------------------------------------------------------------------------------
+SVN revision 3258, compiled Oct 20, 2015 by T. Sturm (sturm@redlog.eu).
+For updates check http://www.redlog.eu/get-redlog/
+--------------------------------------------------------------------------------
+WARNING: This is not an official Reduce distribution. Source distributions and
+official binary distributions can be found at
+
+http://sourceforge.net/projects/reduce-algebra/
+
+The purpose of this distribution is to provide slim recent versions of Redlog
+(including Reduce).
+
+We encourage serious Redlog Users to SVN checkout and compile from source.
+Instructions can be found in the Reduce Wiki here:
+
+http://redlog.eu/reduce-wiki/index.php/Installation
+--------------------------------------------------------------------------------
+Comments:
+
+* Keep the following files and directories together in one directory:
+  reduce.exe, reduce.img, and reduce.doc.
+  reduce.img is not a disk image but a Reduce-specific image.
+  reduce.doc contains the online help for reduce.exe.
+
+* The file manual.pdf is the regular Reduce Manual. For Redlog documentation
+  check http://www.redlog.eu/documentation/
+--------------------------------------------------------------------------------

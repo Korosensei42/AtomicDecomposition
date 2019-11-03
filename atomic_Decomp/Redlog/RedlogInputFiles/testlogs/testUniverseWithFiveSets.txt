@@ -1,0 +1,117 @@
++++ Transcript to testlogs/testUniverseWithFiveSe started at Sat Nov 02 10:25:29 2019 +++
+Reduce (Free CSL version), 20-Oct-15 ...
+
+
+
+{}
+
+
+
+
+vars := {m11011,
+
+         c10010,
+
+         c11010,
+
+         m11000,
+
+         m10100,
+
+         m11001,
+
+         m11101,
+
+         c10000,
+
+         c11101,
+
+         c10100,
+
+         m11100,
+
+         c10111,
+
+         c11100,
+
+         c11110,
+
+         m10000,
+
+         c11000,
+
+         m11010,
+
+         c10011,
+
+         c11011,
+
+         c10101,
+
+         c10110,
+
+         c10001,
+
+         m11110,
+
+         m10111,
+
+         m10110,
+
+         m10001,
+
+         m10010,
+
+         c11111,
+
+         m11111,
+
+         m10011,
+
+         m10101,
+
+         c11001}
+
+
+formula := (0 <= 0 and ((((((((((((
+
+((( - m10000 <= 0 and  - m10001 <= 0) and  - m10010 <= 0) and  - m10011 <= 0)
+
+ and  - m10100 <= 0) and  - m10101 <= 0) and  - m10110 <= 0) and  - m10111 <= 0)
+
+ and  - m11000 <= 0) and  - m11001 <= 0) and  - m11010 <= 0) and  - m11011 <= 0)
+
+ and  - m11100 <= 0) and  - m11101 <= 0) and  - m11110 <= 0) and  - m11111 <= 0)
+
+ and (((((((((((((
+
+((c10000 = 0 impl m10000 = 0) and (c10001 = 0 impl m10001 = 0))
+
+ and (c10010 = 0 impl m10010 = 0)) and (c10011 = 0 impl m10011 = 0))
+
+ and (c10100 = 0 impl m10100 = 0)) and (c10101 = 0 impl m10101 = 0))
+
+ and (c10110 = 0 impl m10110 = 0)) and (c10111 = 0 impl m10111 = 0))
+
+ and (c11000 = 0 impl m11000 = 0)) and (c11001 = 0 impl m11001 = 0))
+
+ and (c11010 = 0 impl m11010 = 0)) and (c11011 = 0 impl m11011 = 0))
+
+ and (c11100 = 0 impl m11100 = 0)) and (c11101 = 0 impl m11101 = 0))
+
+ and (c11110 = 0 impl m11110 = 0)) and (c11111 = 0 impl m11111 = 0)) and 0 = 0
+
+ and not(0 = 0)
+
+
+query := false
+
+
+
+
+
+
+
+*** End-of-file read 
+
++++ Transcript closed at end of run +++

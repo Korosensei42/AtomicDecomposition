@@ -1,0 +1,27 @@
++++ Transcript to testlogs/RedlogTest35.txt started at Sat Nov 02 10:22:39 2019 +++
+Reduce (Free CSL version), 20-Oct-15 ...
+
+
+
+{}
+
+
+
+
++++ Error attempt to take car of an atom: nil
+
+
+formula := 0 = 0
+
+
+query := true
+
+
+
+
+
+
+
+*** End-of-file read 
+
++++ Transcript closed at end of run +++
