@@ -952,7 +952,7 @@ def benchmarkTest(name, attempts):
     print("In total for all test runs:--- %s seconds ---" % executionTime)
     print("On average:--- %s seconds ---" % (executionTime/attempts))
 
-benchmarkTest("BenchmarkTestConjunction1000.txt", 100)
+# benchmarkTest("BenchmarkTestConjunction1000.txt", 100)
 
 def appendNTimes(n):
     res = []
@@ -962,7 +962,7 @@ def appendNTimes(n):
 
 #appendNTimes(1000)
 
-#displayResult()
+displayResult()
 
 # [['subset', [['neg', [['union', [['x1'], ['intersect', [['x2'], ['x3']]]]]]], ['union', [['x2'], ['x3']]]]], ['leq', [['+', [['m', ['union', [['x1'], ['x3']]]], ['m', ['x2']]]], ['+', [['+', [['m', ['x1']], ['m', ['intersect', [['x2'], ['x3']]]]]], ['m', ['x1']]]]]]]
 
