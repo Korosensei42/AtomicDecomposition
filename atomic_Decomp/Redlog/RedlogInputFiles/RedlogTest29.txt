@@ -5,7 +5,8 @@ on rlnzden;
 
 vars := set();
 
-    formula := (0 = 0);
-query := (rlqe ex(vars, formula));
+    formula := (0 = 0
+);
+query := (rlqea ex(vars, formula));
 
 end;

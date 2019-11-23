@@ -1,0 +1,48 @@
+load_package redlog;
+rlset OFSF;
+off rlverbose;
+on rlnzden;
+
+vars := {c110, m100, c100, m110, m111, m101, c111, c101};
+
+    formula := ((((m111 + (m110 + (m100 + m101
+)
+)
+) <= (m111 + (m110 + (m100 + m101
+)
+)
+)
+) and (((((0 <= m100
+) and (0 <= m101
+)
+) and (0 <= m110
+)
+) and (0 <= m111
+)
+) and (((((c100 = 0
+) impl (m100 = 0
+)
+) and ((c101 = 0
+) impl (m101 = 0
+)
+)
+) 
+
+and ((c110 = 0
+) impl (m110 = 0
+)
+)
+) and ((c111 = 0
+) impl (m111 = 0
+)
+)
+)
+)
+) and ((0 = 0
+) and (not(0 = 0)
+)
+)
+);
+query := (rlqea ex(vars, formula));
+
+end;

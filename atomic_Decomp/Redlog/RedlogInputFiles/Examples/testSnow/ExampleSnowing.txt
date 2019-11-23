@@ -1,0 +1,103 @@
++++ Transcript to testSnow/ExampleSnowing.txt started at Sat Nov 23 17:51:24 2019 +++
+Reduce (Free CSL version), 20-Oct-15 ...
+
+
+
+{}
+
+
+
+
+vars := {m110,
+
+         c110,
+
+         c101,
+
+         c100,
+
+         m111,
+
+         m101,
+
+         c111,
+
+         y2,
+
+         y1,
+
+         m100}
+
+
+formula := ((((2*m100 + 2*m101 + 2*m110 + 2*m111 - 1 = 0
+
+ and ((( - m100 <= 0 and  - m101 <= 0) and  - m110 <= 0) and  - m111 <= 0) and (
+
+((c100 = 0 impl m100 = 0) and (c101 = 0 impl m101 = 0))
+
+ and (c110 = 0 impl m110 = 0)) and (c111 = 0 impl m111 = 0))
+
+ and 5*m110 + 5*m111 - 2 = 0 and ( - m110 <= 0 and  - m111 <= 0)
+
+ and (c110 = 0 impl m110 = 0) and (c111 = 0 impl m111 = 0)) and 10*m111 - 1 = 0
+
+ and  - m111 <= 0 and (c111 = 0 impl m111 = 0))
+
+ and  - m100*y1 - m101*y1 - m110*y1 + m110 - m111*y1 + m111 = 0
+
+ and ((( - m100 <= 0 and  - m101 <= 0) and  - m110 <= 0) and  - m111 <= 0) and (
+
+((c100 = 0 impl m100 = 0) and (c101 = 0 impl m101 = 0))
+
+ and (c110 = 0 impl m110 = 0)) and (c111 = 0 impl m111 = 0))
+
+ and  - m100*y1*y2 - m101*y1*y2 - m110*y1*y2 - m111*y1*y2 + m111 = 0
+
+ and ((( - m100 <= 0 and  - m101 <= 0) and  - m110 <= 0) and  - m111 <= 0) and (
+
+((c100 = 0 impl m100 = 0) and (c101 = 0 impl m101 = 0))
+
+ and (c110 = 0 impl m110 = 0)) and (c111 = 0 impl m111 = 0)
+
+
+query := {{true,
+
+           {c100 = infinity2,
+
+            c101 = arbitrary1,
+
+            c110 = infinity1,
+
+            c111 = infinity3,
+
+                    1
+            m100 = ----,
+                    10
+
+            m101 = 0,
+
+                    3
+            m110 = ----,
+                    10
+
+                    1
+            m111 = ----,
+                    10
+
+                  4
+            y1 = ---,
+                  5
+
+                  1
+            y2 = ---}}}
+                  4
+
+
+
+
+
+
+
+*** End-of-file read 
+
++++ Transcript closed at end of run +++

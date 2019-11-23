@@ -1,0 +1,19 @@
+load_package redlog;
+rlset OFSF;
+off rlverbose;
+on rlnzden;
+
+vars := {m1, c1};
+
+    formula := (((5 * m1
+) <= 10
+) and ((0 <= m1
+) and ((c1 = 0
+) impl (m1 = 0
+)
+)
+)
+);
+query := (rlqea ex(vars, formula));
+
+end;

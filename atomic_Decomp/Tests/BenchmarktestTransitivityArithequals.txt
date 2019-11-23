@@ -1,0 +1,3 @@
+[['arithequals', [['m', ['x1']], ['m', ['x2']]]], ['arithequals', [['m', ['x2']], ['m', ['x3']]]], ['arithequals', [['m', ['x3']], ['m', ['x4']]]], ['arithequals', [['m', ['x4']], ['m', ['x5']]]], ['arithequals', [['m', ['x5']], ['m', ['x6']]]], ['arithequals', [['m', ['x6']], ['m', ['x7']]]], ['arithequals', [['m', ['x7']], ['m', ['x8']]]], ['arithequals', [['m', ['x8']], ['m', ['x9']]]], ['arithequals', [['m', ['x1']], ['m', ['x9']]]]]
+
+['x1', 'x2', 'x3', 'x4', 'x5', 'x6', 'x7', 'x8', 'x9']

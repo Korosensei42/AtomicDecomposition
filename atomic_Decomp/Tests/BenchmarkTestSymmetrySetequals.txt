@@ -1,0 +1,3 @@
+[['setequals', [['x1'], ['x2']]], ['setequals', [['x2'], ['x1']]], ['setequals', [['x2'], ['x3']]], ['setequals', [['x3'], ['x2']]], ['setequals', [['x3'], ['x4']]], ['setequals', [['x4'], ['x3']]], ['setequals', [['x4'], ['x5']]], ['setequals', [['x5'], ['x4']]], ['setequals', [['x5'], ['x6']]], ['setequals', [['x6'], ['x5']]], ['setequals', [['x6'], ['x7']]], ['setequals', [['x7'], ['x6']]], ['setequals', [['x7'], ['x8']]], ['setequals', [['x8'], ['x7']]], ['setequals', [['x8'], ['x9']]], ['setequals', [['x9'], ['x8']]]]
+
+['x1', 'x2', 'x3', 'x4', 'x5', 'x6', 'x7', 'x8', 'x9']

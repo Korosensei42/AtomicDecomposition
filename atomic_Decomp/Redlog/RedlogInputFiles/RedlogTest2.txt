@@ -5,7 +5,10 @@ on rlnzden;
 
 vars := {c1};
 
-    formula := ((0 = 0) and (c1 = 0));
-query := (rlqe ex(vars, formula));
+    formula := ((0 = 0
+) and (c1 = 0
+)
+);
+query := (rlqea ex(vars, formula));
 
 end;

@@ -1,0 +1,3 @@
+[['arithequals', [['m', ['x1']], ['0.25']]], ['arithequals', [['m', ['intersect', [['x1'], ['x2']]]], ['0.2']]], ['arithequals', [['*', [['y'], ['m', ['intersect', [['x1'], ['x2']]]]]], ['m', ['x1']]]]]
+
+['x1', 'x2']

@@ -1,0 +1,51 @@
+load_package redlog;
+rlset OFSF;
+off rlverbose;
+on rlnzden;
+
+vars := {c10, m10, m11, c11};
+
+    formula := (((((m10 + m11
+) = 0.25
+) and (((0 <= m10
+) and (0 <= m11
+)
+) and (((c10 = 0
+) impl (m10 = 0
+)
+) and ((c11 = 0
+) impl (m11 = 0
+)
+)
+)
+)
+) and ((m11 = 0.2
+) and ((0 <= m11
+) and ((c11 = 0
+) impl (m11 = 0
+)
+)
+)
+)
+) and (((y * m11
+) = (m10 
+
++ m11
+)
+) and (((0 <= m10
+) and (0 <= m11
+)
+) and (((c10 = 0
+) impl (m10 = 0
+)
+) and ((c11 = 0
+) impl (m11 = 0
+)
+)
+)
+)
+)
+);
+query := (rlqea ex(vars, formula));
+
+end;

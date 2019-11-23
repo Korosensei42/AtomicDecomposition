@@ -1,0 +1,14 @@
+load_package redlog;
+rlset OFSF;
+off rlverbose;
+on rlnzden;
+
+vars := {y3, y2, y1};
+
+    formula := ((y1 <= 2
+) and (y2 <= y3
+)
+);
+query := (rlqea ex(vars, formula));
+
+end;

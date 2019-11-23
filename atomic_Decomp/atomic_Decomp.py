@@ -30,9 +30,10 @@ SET_CONST_UNIVERSE = "U"
 
 ARIT_OP_PLUS = "+"
 ARIT_OP_MEASURE = "m"
+ARIT_OP_MUL = "*"
 ARIT_OP_CONST = "c"
 UNARY_ARIT_OPS = {ARIT_OP_MEASURE, ARIT_OP_CONST}
-ARIT_OPS = {ARIT_OP_PLUS, ARIT_OP_MEASURE, ARIT_OP_CONST}
+ARIT_OPS = {ARIT_OP_PLUS, ARIT_OP_MEASURE, ARIT_OP_CONST, ARIT_OP_MUL}
 
 ARIT_PRED_EQ = "arithequals"
 ARIT_PRED_LEQ = "leq"
@@ -48,8 +49,9 @@ LOG_OP_IMPL = "implies"
 BIN_LOG_OPS = {LOG_OP_AND, LOG_OP_OR, LOG_OP_IMPL}
 LOG_OPS = {LOG_OP_AND, LOG_OP_OR, LOG_OP_NOT, LOG_OP_IMPL}
 
-BIN_PREDS_OPS = {ARIT_OP_PLUS, ARIT_PRED_NEQ}.union(PREDS, BIN_LOG_OPS)
+BIN_PREDS_OPS = {ARIT_OP_PLUS, ARIT_PRED_NEQ, ARIT_OP_MUL}.union(PREDS, BIN_LOG_OPS)
 
+GENERIC_VARIABLE = "y"
 SET_FORMULA_STRING = "Setformula"
 ARIT_FORMULA_STRING = "Arithmeticalformula"
 
@@ -249,21 +251,29 @@ def setFormulaToEqualitiesWithEmptyset(formula, sets):
 # Result: A list consisting the term m(V1) + ... m(Vn) in prefix notation.
 def simplifyMeasures(formula):
     token = formula[0]
-    if token == ARIT_OP_PLUS:
+    if token[0] == GENERIC_VARIABLE:
+        return formula
+    if isNumber(token):
+        return formula
+    if token in {ARIT_OP_PLUS, ARIT_OP_MUL}:
         left_term = formula[1][0]
         right_term = formula[1][1]
-        return [ARIT_OP_PLUS, [simplifyMeasures(left_term), simplifyMeasures(right_term)]]
+        if left_term != [] and right_term != []:
+            return [token, [simplifyMeasures(left_term), simplifyMeasures(right_term)]]
     if token == ARIT_OP_MEASURE:
         vennregions = formula[1]
         if len(vennregions) == 1:
-            return [ARIT_OP_MEASURE, vennregions]
+            if vennregions != [SET_CONST_EMPTY]:
+                return [ARIT_OP_MEASURE + vennregions[0][1:]]
+            else:
+                return [0]
         if len(vennregions) == 2:
             first_vennregion = vennregions[0]
             second_vennregion = vennregions[1]
-            return [ARIT_OP_PLUS, [[ARIT_OP_MEASURE, [first_vennregion]], [ARIT_OP_MEASURE, [second_vennregion]]]]
+            return [ARIT_OP_PLUS, [[ARIT_OP_MEASURE + first_vennregion[1:]], [ARIT_OP_MEASURE + second_vennregion[1:]]]]
         else:
             tmp = vennregions[:-1]
-            return [ARIT_OP_PLUS, [[ARIT_OP_MEASURE, [vennregions[-1]]], [simplifyMeasures([ARIT_OP_MEASURE, tmp])]]]
+            return [ARIT_OP_PLUS, [[ARIT_OP_MEASURE + vennregions[-1][1:]], [simplifyMeasures([ARIT_OP_MEASURE, tmp])]]]
         return formula
 
 # Applies the algorithm for atomic set decomposition for a set formula
@@ -297,12 +307,16 @@ def simplifyArithTerm(term, sets):
         set_term = createVennRepresentation(set_term, sets)
         res[1] = set_term
         return res
-    elif arit_op == ARIT_OP_PLUS:
+    elif arit_op in {ARIT_OP_PLUS, ARIT_OP_MUL}:
         left_term = term[1][0]
         right_term = term[1][1]
-        return [ARIT_OP_PLUS, [simplifyArithTerm(left_term, sets), simplifyArithTerm(right_term, sets)]]
-    elif arit_op[0] == ARIT_OP_CONST:
-        return term
+        return [arit_op, [simplifyArithTerm(left_term, sets), simplifyArithTerm(right_term, sets)]]
+#    elif arit_op[0] == ARIT_OP_CONST:
+#        return term
+    elif isNumber(arit_op):
+        return res
+    elif arit_op[0] == GENERIC_VARIABLE:
+        return res
     else:
         raise ValueError("There has to be an arithmetical function or constant on top. Instead it is: " + str(arit_op))
 
@@ -361,28 +375,34 @@ def flattenWholeList(nested_list):
 # Axioms from M2 are of form (V1010 = emptyset) implies (m(V1010) = 0)
 # Finds the instances of the axioms M1 (non-negativity) and M2 (the empty set has measure 0) for all sets inside a formula
 def findM1M2(formula):
-    tmpM1 = [[ARIT_PRED_LEQ, [[0], [ARIT_OP_MEASURE, [formula[i + 1][0:]]]]] for i in range(len(formula) - 1)
-    if formula[i + 1][0] == "V" and formula[i] == ARIT_OP_MEASURE]
+    formula = [x for x in formula if not isinstance(x, int)]
+    tmpM1 = [[ARIT_PRED_LEQ, [[0], [formula[i]]]] for i in range(len(formula) - 1)
+    if formula[i][0] == ARIT_OP_MEASURE]
     tmpM1.sort()
     tmpM1 = list(item for item,_ in itertools.groupby(tmpM1))
-    tmpM2 = [[LOG_OP_IMPL, [[SET_PRED_EQ, [[formula[i + 1][0:]], [SET_CONST_EMPTY]]], [ARIT_PRED_EQ, [[ARIT_OP_MEASURE, [formula[i + 1][0:]]], [0]]]]] for i in range(len(formula) - 1)
-                                    if formula[i + 1][0] == "V" and formula[i] == ARIT_OP_MEASURE]
+    tmpM2 = [[LOG_OP_IMPL, [[ARIT_PRED_EQ, [["c" + formula[i][1:]], [0]]], [ARIT_PRED_EQ,
+                            [[formula[i]], [0]]]]] for i in range(len(formula) - 1)
+                            if formula[i][0] == ARIT_OP_MEASURE]
     tmpM2.sort()
     tmpM2 = list(item for item,_ in itertools.groupby(tmpM2))
     tmpM1 = connectSubformulas(tmpM1, LOG_OP_AND)
     tmpM2 = connectSubformulas(tmpM2, LOG_OP_AND)
-    tmp = connectSubformulas([tmpM1, tmpM2], LOG_OP_AND)
-    return tmp
+    if tmpM1 != [] and tmpM2 != []:
+        tmp = connectSubformulas([tmpM1, tmpM2], LOG_OP_AND)
+        return tmp
+    else:
+        return []
 
 # Input: A list representing a formula and a list representing a collection of sets
 # Output: A list representing the conjunction of a list containing the axioms M1 and M2 as well as a list containing the formula with only measure atoms of form m(Vx)
 # adds the instances found in findM1M2 to a formula
 def addM1M2(formula, sets):
-    res = formula
+    res = copy.deepcopy(formula)
     res = aritIntroduceVennRepsAndSumOfMeasures(res, sets)
     tmp = list(flattenWholeList(res))
     tmp = findM1M2(tmp)
-    res = [LOG_OP_AND, [res, tmp]]
+    if res != [] and tmp != []:
+        res = [LOG_OP_AND, [res, tmp]]
     return res
 
 # Input: A list representing a formula as well as a list representing a collection of sets
@@ -390,7 +410,8 @@ def addM1M2(formula, sets):
 def purifyArithFormula(formula, sets):
     res = formula
     res = addM1M2(res, sets)
-    res = replaceMeasuresWithVars(res, sets)
+#    print("Before Measure replacement: " + str(res))
+#    res = replaceMeasuresWithVars(res, sets)
     res = rewriteSetEquality(res)
     return res
 
@@ -470,12 +491,12 @@ def rewriteSetEquality(formula):
 def main(formula, sets):
 #    start_time = time.time()
     res = formula
-    for i in range(len(formula)):
-        if detectTypeOfFormula(formula[i], sets) == SET_FORMULA_STRING:
-            res[i] = setFormulasMain(formula[i], sets)
+    for i in range(len(res)):
+        if detectTypeOfFormula(res[i], sets) == SET_FORMULA_STRING:
+            res[i] = setFormulasMain(res[i], sets)
             continue
-        if detectTypeOfFormula(formula[i], sets) == ARIT_FORMULA_STRING:
-            res[i] = purifyArithFormula(formula[i], sets)
+        if detectTypeOfFormula(res[i], sets) == ARIT_FORMULA_STRING:
+            res[i] = purifyArithFormula(res[i], sets)
             continue
     res = connectSubformulas(res, LOG_OP_AND)
 #    print("In total:--- %s seconds ---" % (time.time() - start_time))
@@ -515,8 +536,8 @@ def main(formula, sets):
 # print("purified arithmetical formula: " + str(purifyTest))
 
 # x1 setequals (x2 union x3); m(x1) + m(x2) arithequals m(x2)
-testAll = [["arithequals", [["+", [["m", ["x1"]], ["m", ["x2"]]]], ["m", ["union", ["x1", "x2"]]]]],
-           ["setequals", ["x1", ["union", ["x2", "x3"]]]]]
+#testAll = [["arithequals", [["+", [["m", ["x1"]], ["m", ["x2"]]]], ["m", ["union", ["x1", "x2"]]]]],
+#           ["setequals", ["x1", ["union", ["x2", "x3"]]]]]
 
 # , ["setequals", ["x1", ["union", ["x2", "x3"]]]]
 # mainTest = main(testAll, ["x1", "x2", "x3"])
@@ -550,7 +571,7 @@ def enterSetFormula():
 # the user enters an arithmetical term
 def enterArithTerm():
     res = input(
-        "Please enter one of the symbols + or m: \n")
+        "Please enter one of the symbols + (sum) or m (measure), y (generic variable) or enter any integer (positive or negative or 0): \n")
 #    if res[0] == ARIT_OP_CONST:
 #        return [res]
     if res == ARIT_OP_MEASURE:
@@ -558,10 +579,14 @@ def enterArithTerm():
         res = [res, [setTerm]]
         flattenUnneccessaryListLevels(res)
         return res
-    if res == ARIT_OP_PLUS:
+    if res in {ARIT_OP_PLUS, ARIT_OP_MUL}:
         return [res, [enterArithTerm(), enterArithTerm()]]
-    if res not in {ARIT_OP_MEASURE, ARIT_OP_PLUS}:
-        raise ValueError("You have to enter +, denoting a sum, or m, denoting a measure of a set")
+    if res[0] == GENERIC_VARIABLE:
+        return [res]
+    if isNumber(res):
+        return [str(res)]
+    else:
+        raise ValueError("You have to enter +, denoting a sum, * denoting a product, x denoting a variable, or m, denoting a measure of a set")
 
 # the user enters an arithmetical formula
 def enterArithFormula():
@@ -574,7 +599,7 @@ def enterArithFormula():
 def enterFormula():
     numberOfFormulas = input(
         "Please enter a natural number greater or equal to 1. This number determines how many formulas you want to enter: \n")
-    if not numberOfFormulas.isdigit():
+    if not isNumber(numberOfFormulas):
         raise ValueError("You have to enter a natural number for the number of formulas")
     if int(numberOfFormulas) <= 0:
         raise ValueError("The number of formulas has to be greater or equal to 1")
@@ -594,7 +619,7 @@ def enterFormula():
 # ask the user if he wants to be guided or not. If not, then he can enter via commandline or via a file
 def getUserInput():
     query = input(
-        "If you want to be guided through the process of entering a formula, please press Y/y. If not, please press N/n \n: ")
+        "If you want to be guided through the process of entering a formula, please press Y/y. If not, please press N/n: \n")
     if query.lower() == "y":
         numberOfSets = input(
             "Please enter a natural number n greater or equal to 1. This will determine the maximum index of all sets of form xj you will use from now on. Please don't use an index greater than this: \n")
@@ -644,9 +669,10 @@ def displayResultFromConstantInput(inputfile):
     with open(filepath, "r") as file:
         content = [i.strip() for i in file.readlines() if len(i.strip()) > 0]
     sets = ast.literal_eval(content[-1])
-    formula = ast.literal_eval(content[0])
+    tmp = ast.literal_eval(content[0])
+    formula = copy.deepcopy(tmp)
     res =  main(formula, sets)
-#    res = flattenUnneccessaryListLevels(res)
+    res = flattenUnneccessaryListLevels(res)
 #    toGraphBool = input("If you want your resulting formula to be displayed as a graph, press Y/y. If not, press N/n: \n")
 #    if toGraphBool not in {"n", "N", "y", "Y"}:
 #        raise ValueError("You have to enter y for yes or n for no")
@@ -661,7 +687,9 @@ def decideTypeOfInput():
     query = input(
         "Please press F to enter your formula from a file or press C to enter your formula in the console: \n")
     if query.lower() == "f":
-        return getFileInput()
+        fileInput = getFileInput()
+        print(fileInput)
+        return fileInput
     if query.lower() == "c":
         formulaInput = input("Please enter a list of all formulas: \n")
         setInput = input("Please enter a list of all sets included in your formulas: \n")
@@ -677,15 +705,21 @@ def getFileInput():
     filepath = "Tests/" + str(filename)
     with open(filepath, "r") as file:
         content = [i.strip() for i in file.readlines() if len(i.strip()) > 0]
+    tmp = ast.literal_eval(content[0])
+    formula = copy.deepcopy(tmp)
     sets = ast.literal_eval(content[-1])
-    formula = ast.literal_eval(content[0])
-    return [formula, main(formula, sets)]
+    return [main(tmp, sets), formula]
 
 
 def printFormulaToRedlogFile(formula, name):
     if CREATE_REDLOG_FILES_BOOL:
         redlogfilepath = REDLOG_PATH + name + ".txt"
-        formula_as_string = listToString(formula[0])
+        tmp = formula
+        while isinstance(tmp[0], list):
+            tmp = tmp[0]
+        formula_as_string = listToString(tmp)
+        formula_as_string = convert(formula_as_string, 200)
+#         formula_as_string = convert(formula_as_string)
         content = setupRedlogFile(formula_as_string)
         writeInFile(redlogfilepath, content)
 
@@ -832,10 +866,13 @@ def appendGraphs(rootcontent, in_list_1, in_list_2):
     return root
 
 def nestedListToGraph(in_list):
-    rootcontent = in_list[0]
+    tmp = in_list
+    while isinstance(tmp[0], list):
+        tmp = tmp[0]
+    rootcontent = tmp[0]
     if rootcontent in BIN_PREDS_OPS:
-        left_graph = in_list[1][0]
-        right_graph = in_list[1][1]
+        left_graph = tmp[1][0]
+        right_graph = tmp[1][1]
         left_graph = listToGraph(left_graph)
         right_graph = listToGraph(right_graph)
         root = Node(rootcontent, children=(left_graph, right_graph))
@@ -862,22 +899,63 @@ def listToString(in_list):
         res = " " + str(token) + " "
         left_part = tmp_list[1][0]
         right_part = tmp_list[1][1]
-        return "(" + optionalNegation + optionalBracketLeft + listToString(left_part) + "\n" + res + "\n" +  listToString(right_part) + optionalBracketRight + ")"
+        return "(" + optionalNegation + optionalBracketLeft + listToString(left_part) + res + listToString(right_part) + optionalBracketRight + "\n)"
 #        return "(" + optionalNegation + optionalBracketLeft + listToString(left_part) + res +  listToString(right_part) + optionalBracketRight + ")"
     return str(token)
 
-test = listToString(['and', [['arithequals', [['+', [['+', [['m111'], ['+', [['m110'], ['+', [['m100'], ['m101']]]]]]], ['+', [['m111'], ['+', [['m110'], ['+', [['m010'], ['m011']]]]]]]]], ['+', [['m100'], ['+', [['m101'], ['+', [['m010'], ['+', [['m011'], ['+', [['m111'], ['m110']]]]]]]]]]]]], ['and', [['and', [['and', [['and', [['and', [['and', [['leq', [[0], ['m010']]], ['leq', [[0], ['m011']]]]], ['leq', [[0], ['m100']]]]], ['leq', [[0], ['m101']]]]], ['leq', [[0], ['m110']]]]], ['leq', [[0], ['m111']]]]], ['and', [['and', [['and', [['and', [['and', [['implies', [['arithequals', [['c010'], [0]]], ['arithequals', [['m010'], [0]]]]], ['implies', [['arithequals', [['c011'], [0]]], ['arithequals', [['m011'], [0]]]]]]], ['implies', [['arithequals', [['c100'], [0]]], ['arithequals', [['m100'], [0]]]]]]], ['implies', [['arithequals', [['c101'], [0]]], ['arithequals', [['m101'], [0]]]]]]], ['implies', [['arithequals', [['c110'], [0]]], ['arithequals', [['m110'], [0]]]]]]], ['implies', [['arithequals', [['c111'], [0]]], ['arithequals', [['m111'], [0]]]]]]]]]]])
+#test = listToString(['and', [['arithequals', [['+', [['+', [['m111'], ['+', [['m110'], ['+', [['m100'], ['m101']]]]]]], ['+', [['m111'], ['+', [['m110'], ['+', [['m010'], ['m011']]]]]]]]], ['+', [['m100'], ['+', [['m101'], ['+', [['m010'], ['+', [['m011'], ['+', [['m111'], ['m110']]]]]]]]]]]]], ['and', [['and', [['and', [['and', [['and', [['and', [['leq', [[0], ['m010']]], ['leq', [[0], ['m011']]]]], ['leq', [[0], ['m100']]]]], ['leq', [[0], ['m101']]]]], ['leq', [[0], ['m110']]]]], ['leq', [[0], ['m111']]]]], ['and', [['and', [['and', [['and', [['and', [['implies', [['arithequals', [['c010'], [0]]], ['arithequals', [['m010'], [0]]]]], ['implies', [['arithequals', [['c011'], [0]]], ['arithequals', [['m011'], [0]]]]]]], ['implies', [['arithequals', [['c100'], [0]]], ['arithequals', [['m100'], [0]]]]]]], ['implies', [['arithequals', [['c101'], [0]]], ['arithequals', [['m101'], [0]]]]]]], ['implies', [['arithequals', [['c110'], [0]]], ['arithequals', [['m110'], [0]]]]]]], ['implies', [['arithequals', [['c111'], [0]]], ['arithequals', [['m111'], [0]]]]]]]]]]])
+
+def convert(in_string, position):
+    # remove whitespace from string
+#    in_string = in_string.replace(" ", "")
+    commaPosition = in_string.find(",", position)
+    andPosition = in_string.find("and", position)
+    plusPosition = in_string.find("+", position)
+    bracketPosition = in_string.find(")", position)
+    if plusPosition != -1:
+        return in_string[:plusPosition] + in_string[plusPosition].replace(in_string[plusPosition], "\n" + convert(in_string[plusPosition:], position))
+    if commaPosition != -1:
+        return in_string[:commaPosition] + in_string[commaPosition].replace(in_string[commaPosition], "\n" + convert(in_string[commaPosition:], position))
+    if andPosition != -1:
+        return in_string[:andPosition] + in_string[andPosition].replace(in_string[andPosition], "\n" + convert(in_string[andPosition:], position))
+    if bracketPosition != -1:
+        return in_string[:bracketPosition] + in_string[bracketPosition].replace(in_string[bracketPosition], "\n" + convert(in_string[bracketPosition:], position))
+
+    # split the string every 500 characters
+    # create a list of every 2 characters in the str.
+#    result = [in_string[i:i+n] for i in range(0, len(in_string), n)]
+    # convert the list to a colon-seperated string
+#    string = "\n".join(result)
+    # return the result
+    return in_string
+
+def isNumber(user_input):
+    try:
+        if "." in user_input or user_input.isdigit():
+            return True
+    except ValueError:
+        return False
+
+#print(commaPosition)
+#print(andPosition)
+#print(in_string[:13])
+#print(in_string[13:])
+#print(in_string[13])
+#print(in_string[13].replace(in_string[13], in_string[13:16] + "af\ngf"))
+
+
 
 def getVarsFromString(in_str):
     listOfWords = re.sub("[^\w]", " ",  in_str).split()
-    allvars = [var for var in listOfWords if var.startswith("m") or var.startswith("c")]
+    allvars = [var for var in listOfWords if var.startswith("m") or var.startswith("c") or var.startswith("y")]
     allvars = set(allvars)
-    return allvars;
+    return convert(str(allvars), 200);
 
 def setupRedlogFile(in_str):
     allvars = "vars := " + str(getVarsFromString(in_str)).replace("'", "")
+    formula = convert(in_str, 200)
     remainingFile =  """load_package redlog;\nrlset OFSF;\noff rlverbose;\non rlnzden;\n\n""" + allvars + ";"  """\n
-    formula := """ + in_str + ";\n"+ "query := (rlqe ex(vars, formula));\n\nend;".replace("'", "")
+    formula := """ + formula + ";\n"+ "query := (rlqea ex(vars, formula));\n\nend;".replace("'", "")
     return remainingFile
 
 def check_for_balanced_parantheses(expression):
@@ -918,11 +996,6 @@ def check_for_balanced_parantheses(expression):
 # DotExporter(testListToGraph([1, 2, 3, 4, 5])).to_picture("root.png")
 # setupAllTest()
 
-# just a boolean to decide whether every test should be executed
-testAllBool = False
-if testAllBool:
-    executeAllTests()
-
 #testExampleFromPaper = [["subsetequals", [["x1"], ["x2"]]], [arithequals, [["m", ["x1"]], ["m", ["intersect", [["x1"], ["neg", ["x2"]]]]]]]]
 #result = main(testExampleFromPaper, ["x1", "x2"])
 #print(result)
@@ -952,7 +1025,7 @@ def benchmarkTest(name, attempts):
     print("In total for all test runs:--- %s seconds ---" % executionTime)
     print("On average:--- %s seconds ---" % (executionTime/attempts))
 
-# benchmarkTest("BenchmarkTestConjunction1000.txt", 100)
+#benchmarkTest("BenchmarkTestSymmetrySetequals.txt", 100)
 
 def appendNTimes(n):
     res = []
@@ -962,7 +1035,18 @@ def appendNTimes(n):
 
 #appendNTimes(1000)
 
-displayResult()
+# just a boolean to decide whether every test should be executed
+testAllBool = True
+if testAllBool:
+    start_time = time.time()
+    executeAllTests()
+    executionTime = (time.time() - start_time)
+    print("In total for all test runs:--- %s seconds ---" % executionTime)
+    print("On average:--- %s seconds ---" % (executionTime/NUMBER_OF_TESTS))
+
+#displayResult()
+
+#displayResultFromConstantInput("TestConditionalProbability.txt")
 
 # [['subset', [['neg', [['union', [['x1'], ['intersect', [['x2'], ['x3']]]]]]], ['union', [['x2'], ['x3']]]]], ['leq', [['+', [['m', ['union', [['x1'], ['x3']]]], ['m', ['x2']]]], ['+', [['+', [['m', ['x1']], ['m', ['intersect', [['x2'], ['x3']]]]]], ['m', ['x1']]]]]]]
 

@@ -1,0 +1,14 @@
+load_package redlog;
+rlset OFSF;
+off rlverbose;
+on rlnzden;
+
+vars := set();
+
+    formula := ((2 <= 3
+) and (1 <= 4
+)
+);
+query := (rlqea ex(vars, formula));
+
+end;

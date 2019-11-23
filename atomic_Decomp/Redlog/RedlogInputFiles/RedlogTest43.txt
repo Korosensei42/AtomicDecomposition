@@ -3,9 +3,10 @@ rlset OFSF;
 off rlverbose;
 on rlnzden;
 
-vars := {m1, c1};
+vars := {m1};
 
-    formula := ((m1 <= 0) and ((0 <= m1) and ((c1 = 0) impl (m1 = 0))));
-query := (rlqe ex(vars, formula));
+    formula := (m1 <= 0
+);
+query := (rlqea ex(vars, formula));
 
 end;
